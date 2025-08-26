@@ -63,7 +63,7 @@ public class RewardServiceImpl implements RewardService {
                 .map(obj -> new CustomerRewardSummaryDTO(
                         ((Number) obj[0]).longValue(),
                         (String) obj[1],
-                        ((Number) obj[2]).intValue()
+                        ((Number) obj[3]).intValue()
                 ))
                 .collect(Collectors.toList());
     }
@@ -83,4 +83,5 @@ public class RewardServiceImpl implements RewardService {
     }
 
 }
+
 
