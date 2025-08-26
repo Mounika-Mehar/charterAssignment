@@ -11,9 +11,8 @@ import com.example.Rewards.entity.Transaction;
 public interface RewardService {
     RewardPoint calculateRewardForTransaction(Transaction transaction);
     List<RewardPoint> calculateRewardsForCustomer(Long customerId);
-
-
     List<MonthlyRewardDTO> getMonthlyRewards(Long customerId);
     TotalRewardDTO getTotalRewards(Long customerId);
     List<CustomerRewardSummaryDTO> getRewardsForAll();
 }
+
