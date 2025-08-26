@@ -24,6 +24,8 @@ public class RewardPoint {
 
     @ManyToOne
     @JoinColumn(name = "transaction_id")
+    @JsonIgnore
     private Transaction customerTransaction;
 }
+
 
