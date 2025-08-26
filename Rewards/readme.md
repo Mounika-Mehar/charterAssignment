@@ -1,3 +1,4 @@
+
 # Rewards System
 
 This project is a Spring Boot application for calculating and managing customer reward points based on transactions. It demonstrates a service-oriented architecture to implement a reward calculation system.
@@ -6,21 +7,21 @@ This project is a Spring Boot application for calculating and managing customer 
 
 ## Features
 
-- Calculate reward points for individual transactions
-- Calculate rewards for all transactions of a customer
-- Get monthly reward points for a customer
-- Get total reward points for a customer
-- Get rewards summary for all customers
+- Calculate reward points for individual transactions  
+- Calculate rewards for all transactions of a customer  
+- Get monthly reward points for a customer  
+- Get total reward points for a customer  
+- Get rewards summary for all customers  
 
 ---
 
 ## Technologies Used
 
-- Java 17
-- Spring Boot
-- Lombok
-- Maven
-- JUnit 5 and Mockito for testing
+- Java 17  
+- Spring Boot  
+- Lombok  
+- Maven  
+- JUnit 5 and Mockito for testing  
 
 ---
 
@@ -42,9 +43,9 @@ This project is a Spring Boot application for calculating and managing customer 
 
 ## Reward Calculation Logic
 
-- Transactions above 50 units earn reward points.
-- For every dollar spent between 50 and 100, the customer earns 1 point.
-- For every dollar spent above 100, the customer earns 2 points plus 50 points for the first 50 dollars over 50.
+- Transactions above 50 units earn reward points.  
+- For every dollar spent between 50 and 100, the customer earns 1 point.  
+- For every dollar spent above 100, the customer earns 2 points plus 50 points for the first 50 dollars over 50.  
 
 **Example Calculation:**  
 
@@ -55,8 +56,85 @@ Transaction of 120 →
 
 ---
 
-## Example DTOs
+##  API Endpoints & Example Outputs  
 
-- **MonthlyRewardDTO** → Holds month and reward points
-- **TotalRewardDTO** → Holds customerId and total reward points
-- **CustomerRewardSummaryDTO** → Holds customerId, month, and points
+###  Add Transaction  
+**POST** `/transactions/{customerId}`  
+
+**Request**  
+```json
+{
+  "amount": 120.00,
+  "date": "2025-08-01"
+}
+````
+
+---
+
+###  Get Monthly Rewards
+
+**GET** `/rewards/{customerId}/monthly`
+
+**Response**
+
+```json
+[
+  { "month": "JUNE", "points": 90 },
+  { "month": "JULY", "points": 75 },
+  { "month": "AUGUST", "points": 40 }
+]
+```
+
+---
+
+###  Get Total Rewards
+
+**GET** `/rewards/{customerId}/total`
+
+**Response**
+
+```json
+{
+  "customerId": 101,
+  "totalPoints": 205
+}
+```
+
+---
+
+###  Get Rewards for All Customers
+
+**GET** `/rewards/all`
+
+**Response**
+
+```json
+[
+  { "customerId": 101, "customerName": "Alice", "totalPoints": 205 },
+  { "customerId": 102, "customerName": "Bob", "totalPoints": 120 },
+  { "customerId": 103, "customerName": "Charlie", "totalPoints": 95 }
+]
+```
+
+---
+
+###  Get Customer Reward Summary
+
+**GET** `/rewards/{customerId}/summary`
+
+**Response**
+
+```json
+{
+  "customerId": 101,
+  "monthlyRewards": [
+    { "month": "JUNE", "points": 90 },
+    { "month": "JULY", "points": 75 },
+    { "month": "AUGUST", "points": 40 }
+  ],
+  "totalPoints": 205
+}
+```
+
+
+
