@@ -24,9 +24,11 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @JsonIgnore
     private Customer customer;
 
     @OneToMany(mappedBy = "customerTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RewardPoint> rewardPoints;
 }
+
 
