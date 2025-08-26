@@ -32,4 +32,11 @@ public class RewardPointApi {
     public List<CustomerRewardSummaryDTO> getRewardsForAll() {
         return rewardService.getRewardsForAll();
     }
+    @GetMapping("/{customerId}/summary")
+    public CustomerRewardDTO getCustomerRewardSummary(@PathVariable Long customerId) {
+        List<MonthlyRewardDTO> monthlyRewards = rewardService.getMonthlyRewards(customerId);
+        int totalPoints = rewardService.getTotalRewards(customerId).getTotalPoints();
+        return new CustomerRewardDTO(customerId, monthlyRewards, totalPoints);
+    }
 }
+
