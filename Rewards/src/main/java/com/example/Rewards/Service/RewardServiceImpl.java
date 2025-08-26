@@ -69,14 +69,18 @@ public class RewardServiceImpl implements RewardService {
     }
 
     private int calculatePoints(BigDecimal amount) {
-        double amt = amount.doubleValue();
         int points = 0;
-        if (amt > 100) {
-            points += (int) (2 * (amt - 100));
+        BigDecimal fifty = BigDecimal.valueOf(50);
+        BigDecimal hundred = BigDecimal.valueOf(100);
+
+        if (amount.compareTo(hundred) > 0) {
+            points += amount.subtract(hundred).multiply(BigDecimal.valueOf(2)).intValue();
             points += 50;
-        } else if (amt > 50) {
-            points += (int) (amt - 50);
+        } else if (amount.compareTo(fifty) > 0) {          
+            points += amount.subtract(fifty).intValue();
         }
         return points;
     }
+
 }
+
