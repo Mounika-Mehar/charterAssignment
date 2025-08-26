@@ -110,9 +110,41 @@ Transaction of 120 →
 
 ```json
 [
-  { "customerId": 101, "customerName": "Alice", "totalPoints": 205 },
-  { "customerId": 102, "customerName": "Bob", "totalPoints": 120 },
-  { "customerId": 103, "customerName": "Charlie", "totalPoints": 95 }
+    {
+        "customerId": 1,
+        "month": "June",
+        "points": 90
+    },
+    {
+        "customerId": 1,
+        "month": "July",
+        "points": 25
+    },
+    {
+        "customerId": 1,
+        "month": "August",
+        "points": 0
+    },
+    {
+        "customerId": 2,
+        "month": "July",
+        "points": 250
+    },
+    {
+        "customerId": 2,
+        "month": "August",
+        "points": 40
+    },
+    {
+        "customerId": 3,
+        "month": "June",
+        "points": 10
+    },
+    {
+        "customerId": 3,
+        "month": "August",
+        "points": 120
+    }
 ]
 ```
 
@@ -135,6 +167,7 @@ Transaction of 120 →
   "totalPoints": 205
 }
 ```
+
 
 
 
