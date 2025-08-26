@@ -120,7 +120,7 @@ Transaction of 120 →
 
 ###  Get Customer Reward Summary
 
-**GET** `/rewards/{customerId}/summary`
+**GET** `/rewards/{customerId}/customer-rewards`
 
 **Response**
 
@@ -135,6 +135,7 @@ Transaction of 120 →
   "totalPoints": 205
 }
 ```
+
 
 
 
