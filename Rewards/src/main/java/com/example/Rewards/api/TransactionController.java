@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
-public class TransactionApi {
+public class TransactionController {
 
     private final TransactionService transactionService;
 
@@ -32,5 +32,6 @@ public class TransactionApi {
         transactionService.deleteTransaction(id);
     }
 }
+
 
 
