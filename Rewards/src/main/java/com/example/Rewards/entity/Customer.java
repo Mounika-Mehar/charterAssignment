@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "customer")
 public class Customer {
 
     @Id
@@ -30,3 +31,4 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 }
+
