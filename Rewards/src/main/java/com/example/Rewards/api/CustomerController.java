@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
-public class CustomerApi {
+public class CustomerController {
 
     private final CustomerService customerService;
 
@@ -40,3 +40,4 @@ public class CustomerApi {
         customerService.deleteCustomer(id);
     }
 }
+
