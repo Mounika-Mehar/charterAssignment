@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rewards")
 @RequiredArgsConstructor
-public class RewardPointApi {
+public class RewardPointController {
 
     private final RewardService rewardService;
 
@@ -40,5 +40,6 @@ public class RewardPointApi {
         return new CustomerRewardDTO(customerId, monthlyRewards, totalPoints);
     }
 }
+
 
 
