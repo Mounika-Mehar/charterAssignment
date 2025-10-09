@@ -1,9 +1,10 @@
-package com.example.Rewards.Service;
+package com.example.rewards.Service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.Rewards.Repository.CustomerRepository;
-import com.example.Rewards.entity.Customer;
+import com.example.rewards.repository.CustomerRepository;
+import com.example.rewards.entity.Customer;
+import com.example.rewards.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -22,25 +23,28 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public void deleteCustomer(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + customerId));
+        customerRepository.delete(customer);
+    }
+
+    @Override
+    public Customer getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + customerId));
+    }
+
+    @Override
     public Customer updateCustomer(Long customerId, Customer updatedCustomer) {
         return customerRepository.findById(customerId)
                 .map(customer -> {
                     customer.setName(updatedCustomer.getName());
                     customer.setEmail(updatedCustomer.getEmail());
                     return customerRepository.save(customer);
-                }).orElseThrow(() -> new RuntimeException("Customer not found"));
+                }).orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + customerId));
     }
 
-    @Override
-    public void deleteCustomer(Long customerId) {
-        customerRepository.deleteById(customerId);
-    }
-
-    @Override
-    public Customer getCustomerById(Long customerId) {
-        return customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-    }
 
     @Override
     public List<Customer> getAllCustomers() {
