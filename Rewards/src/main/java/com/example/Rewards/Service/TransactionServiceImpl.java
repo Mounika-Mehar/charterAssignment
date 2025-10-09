@@ -1,11 +1,12 @@
-package com.example.Rewards.Service;
+package com.example.rewards.Service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.Rewards.Repository.CustomerRepository;
-import com.example.Rewards.Repository.TransactionRepository;
-import com.example.Rewards.entity.Customer;
-import com.example.Rewards.entity.Transaction;
+import com.example.rewards.repository.CustomerRepository;
+import com.example.rewards.repository.TransactionRepository;
+import com.example.rewards.entity.Customer;
+import com.example.rewards.entity.Transaction;
+import com.example.rewards.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction addTransaction(Long customerId, Transaction transaction) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         transaction.setCustomer(customer);
         return transactionRepository.save(transaction);
     }
@@ -36,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getTransactionsByCustomer(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         return customer.getTransactions();
     }
 }
