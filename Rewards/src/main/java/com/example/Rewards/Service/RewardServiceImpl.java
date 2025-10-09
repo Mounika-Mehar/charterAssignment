@@ -1,14 +1,14 @@
-package com.example.Rewards.Service;
+package com.example.rewards.Service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.Rewards.Repository.RewardPointRepository;
-import com.example.Rewards.Repository.TransactionRepository;
-import com.example.Rewards.dto.CustomerRewardSummaryDTO;
-import com.example.Rewards.dto.MonthlyRewardDTO;
-import com.example.Rewards.dto.TotalRewardDTO;
-import com.example.Rewards.entity.RewardPoint;
-import com.example.Rewards.entity.Transaction;
+import com.example.rewards.repository.RewardPointRepository;
+import com.example.rewards.repository.TransactionRepository;
+import com.example.rewards.dto.CustomerRewardSummaryDTO;
+import com.example.rewards.dto.MonthlyRewardDTO;
+import com.example.rewards.dto.TotalRewardDTO;
+import com.example.rewards.entity.RewardPoint;
+import com.example.rewards.entity.Transaction;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +25,22 @@ public class RewardServiceImpl implements RewardService {
 
     @Override
     public RewardPoint calculateRewardForTransaction(Transaction transaction) {
+        if (transaction == null) {
+            throw new IllegalArgumentException("Transaction cannot be null");
+        }
+        if (transaction.getAmount() == null) {
+            throw new IllegalArgumentException("Transaction amount cannot be null");
+        }
+        if (transaction.getDate() == null) {
+            throw new IllegalArgumentException("Transaction date cannot be null");
+        }
+
         int points = calculatePoints(transaction.getAmount());
         String month = transaction.getDate().getMonth().toString();
         RewardPoint rewardPoint = new RewardPoint(null, points, month, transaction.getDate().getYear(), transaction);
         return rewardPointRepository.save(rewardPoint);
     }
+
 
     @Override
     public List<RewardPoint> calculateRewardsForCustomer(Long customerId) {
@@ -42,12 +53,13 @@ public class RewardServiceImpl implements RewardService {
     public List<MonthlyRewardDTO> getMonthlyRewards(Long customerId) {
         return rewardPointRepository.findMonthlyPointsByCustomer(customerId)
                 .stream()
-                .map(obj -> new MonthlyRewardDTO(
-                        (String) obj[0],               // month
-                        ((Number) obj[2]).intValue()   //points
+                .map(dto -> new MonthlyRewardDTO(
+                        dto.getMonth(),        // from MonthlyPointsDTO getter
+                        dto.getTotalPoints()   // from MonthlyPointsDTO getter
                 ))
                 .collect(Collectors.toList());
     }
+
 
 
     @Override
@@ -60,28 +72,25 @@ public class RewardServiceImpl implements RewardService {
     public List<CustomerRewardSummaryDTO> getRewardsForAll() {
         return rewardPointRepository.findPointsForAllCustomers()
                 .stream()
-                .map(obj -> new CustomerRewardSummaryDTO(
-                        ((Number) obj[0]).longValue(),
-                        (String) obj[1],
-                        ((Number) obj[3]).intValue()
+                .map(dto -> new CustomerRewardSummaryDTO(
+                        dto.getCustomerId(),
+                        dto.getMonth(),
+                        dto.getTotalPoints().intValue()
                 ))
                 .collect(Collectors.toList());
     }
 
-    private int calculatePoints(BigDecimal amount) {
-        int points = 0;
-        BigDecimal fifty = BigDecimal.valueOf(50);
-        BigDecimal hundred = BigDecimal.valueOf(100);
 
-        if (amount.compareTo(hundred) > 0) {
-            points += amount.subtract(hundred).multiply(BigDecimal.valueOf(2)).intValue();
+
+    private int calculatePoints(BigDecimal amount) {
+        double amt = amount.doubleValue();
+        int points = 0;
+        if (amt > 100) {
+            points += (int) (2 * (amt - 100));
             points += 50;
-        } else if (amount.compareTo(fifty) > 0) {          
-            points += amount.subtract(fifty).intValue();
+        } else if (amt > 50) {
+            points += (int) (amt - 50);
         }
         return points;
     }
-
 }
-
-
