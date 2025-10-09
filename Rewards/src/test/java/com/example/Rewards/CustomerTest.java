@@ -1,11 +1,13 @@
-package com.example.Rewards;
+package com.example.rewards;
 
-import com.example.Rewards.Repository.CustomerRepository;
-import com.example.Rewards.Service.CustomerServiceImpl;
-import com.example.Rewards.entity.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import com.example.rewards.repository.CustomerRepository;
+import com.example.rewards.Service.CustomerServiceImpl;
+import com.example.rewards.entity.Customer;
+import com.example.rewards.exception.ResourceNotFoundException;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -13,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class CustomerServiceTest {
+class CustomerTest {
 
     private CustomerRepository customerRepository;
     private CustomerServiceImpl customerService;
@@ -52,7 +54,7 @@ class CustomerServiceTest {
     @Test
     void testGetCustomerById_NotFound() {
         when(customerRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> customerService.getCustomerById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> customerService.getCustomerById(1L));
     }
 
     @Test
@@ -60,4 +62,27 @@ class CustomerServiceTest {
         when(customerRepository.findAll()).thenReturn(Arrays.asList(new Customer(), new Customer()));
         assertEquals(2, customerService.getAllCustomers().size());
     }
+    
+    @Test
+    void givenExistingCustomerId_whenDeleteCustomer_thenCustomerIsDeleted() {
+        Customer existing = new Customer(1L, "John", "john@example.com", null);
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(existing));
+        doNothing().when(customerRepository).delete(existing);
+
+        assertDoesNotThrow(() -> customerService.deleteCustomer(1L));
+
+        verify(customerRepository, times(1)).findById(1L);
+        verify(customerRepository, times(1)).delete(existing);
+    }
+
+    @Test
+    void givenNonExistingCustomerId_whenDeleteCustomer_thenThrowResourceNotFoundException() {
+        when(customerRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> customerService.deleteCustomer(1L));
+
+        verify(customerRepository, times(1)).findById(1L);
+        verify(customerRepository, times(0)).delete(any());
+    }
+
 }
